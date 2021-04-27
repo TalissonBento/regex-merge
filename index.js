@@ -58,6 +58,7 @@ async function mergeToHead(branch) {
     base: branch,
     head: headBranch,
   });
+  console.log(`merge status: ${status}`);
   switch (status) {
     case 201:
       console.log(`Merging ${headBranch} to ${branch} successful`);
@@ -76,6 +77,7 @@ function handleRequestError(error, branch, sha) {
   if (error instanceof requestError.RequestError) {
     if (error.status == 409) {
       commentInPr(branch, sha);
+      msg = error;
     } else {
       msg = `[${error.status}] ${error.message}`;
     }
