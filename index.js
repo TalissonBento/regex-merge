@@ -32,7 +32,11 @@ async function run() {
         console.log(`${name} matches with ${branchRegex}`)
       }
       if (validRegex || matched) {
-        await mergeToHead(name).catch((e) => handleRequestError(e, name, sha));
+        try {
+          await mergeToHead(name);
+        } catch (e) {
+          handleRequestError(e, name, sha)
+        }
       }
     }
     if (branches.length == 0) {
@@ -47,6 +51,7 @@ async function mergeToHead(branch) {
   if (branch == headBranch) {
     return;
   }
+  console.log(`start merging ${headBranch} into ${branch}`);
   const { status, ...response } = await octokit.repos.merge({
     owner: owner,
     repo: repo,
