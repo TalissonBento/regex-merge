@@ -30,9 +30,7 @@ async function run() {
       const validRegex = !branchRegex;
       const matched = name.match(branchRegex);
       if (matched) {
-        console.log(`match ${name} with ${branchRegex}`)
-      } else {
-        console.warn(`fail to match ${name} with ${branchRegex}`)
+        console.log(`${name} matches with ${branchRegex}`)
       }
       if (validRegex || matched) {
         mergeToHead(name).catch((e) => handleRequestError(e, name, sha));
@@ -64,7 +62,7 @@ async function mergeToHead(branch) {
       console.log(`Nothing to merge from ${headBranch} to ${branch}`);
       break;
     default:
-      console.warn(`Merging ${headBranch} to ${branch}:`, response);
+      console.log(`Merging ${headBranch} to ${branch}:`, response);
       break;
   }
 }
