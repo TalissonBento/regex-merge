@@ -25,16 +25,17 @@ async function run() {
     });
     console.log(`${branches.length} branches on page ${currentPage}`);
 
-    branches.forEach(({ name, commit: { sha } }) => {
+    for (const {name, commit: {sha}} of branches) {
       const validRegex = !branchRegex;
       const matched = name.match(branchRegex);
       if (matched) {
         console.log(`${name} matches with ${branchRegex}`)
       }
       if (validRegex || matched) {
-        mergeToHead(name).catch((e) => handleRequestError(e, name, sha));
+        const promise = await mergeToHead(name);
+        promise.catch((e) => handleRequestError(e, name, sha));
       }
-    });
+    }
     if (branches.length == 0) {
       keepCheckingBranches = false;
     } else {
@@ -53,7 +54,6 @@ async function mergeToHead(branch) {
     base: branch,
     head: headBranch,
   });
-  console.log(`status: ${status}; response: ${JSON.stringify(response)}`)
   switch (status) {
     case 201:
       console.log(`Merging ${headBranch} to ${branch} successful`);
