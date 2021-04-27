@@ -24,9 +24,17 @@ async function run() {
       page: currentPage,
     });
     console.log(`${branches.length} branches on page ${currentPage}`);
+    console.log(`branches: ${branches}`);
 
     branches.forEach(({ name, commit: { sha } }) => {
-      if (!branchRegex || name.match(branchRegex)) {
+      const validRegex = !branchRegex;
+      const matched = name.match(branchRegex);
+      if (matched) {
+        console.log(`match ${name} with ${branchRegex}`)
+      } else {
+        console.warn(`fail to match ${name} with ${branchRegex}`)
+      }
+      if (validRegex || matched) {
         mergeToHead(name).catch((e) => handleRequestError(e, name, sha));
       }
     });
