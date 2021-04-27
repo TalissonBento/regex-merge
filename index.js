@@ -24,7 +24,7 @@ async function run() {
       page: currentPage,
     });
     console.log(`${branches.length} branches on page ${currentPage}`);
-    console.log(`branches: ${branches}`);
+    console.log(`branches: ${JSON.stringify(branches)}`);
 
     branches.forEach(({ name, commit: { sha } }) => {
       const validRegex = !branchRegex;
