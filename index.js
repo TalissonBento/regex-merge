@@ -24,7 +24,6 @@ async function run() {
       page: currentPage,
     });
     console.log(`${branches.length} branches on page ${currentPage}`);
-    console.log(`branches: ${JSON.stringify(branches)}`);
 
     branches.forEach(({ name, commit: { sha } }) => {
       const validRegex = !branchRegex;
@@ -54,6 +53,7 @@ async function mergeToHead(branch) {
     base: branch,
     head: headBranch,
   });
+  console.log(`status: ${status}; response: ${JSON.stringify(response)}`)
   switch (status) {
     case 201:
       console.log(`Merging ${headBranch} to ${branch} successful`);
