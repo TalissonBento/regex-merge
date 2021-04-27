@@ -7,6 +7,7 @@ const accessToken = core.getInput("accessToken");
 const headBranch = core.getInput("headBranch");
 let branchRegex = core.getInput("branchRegex");
 const notifyConflicts = core.getInput("notifyConflicts");
+const abortOnConflict = core.getInput("abortOnConflict");
 
 const octokit = github.getOctokit(accessToken);
 if (branchRegex) {
@@ -35,7 +36,8 @@ async function run() {
         try {
           await mergeToHead(name);
         } catch (e) {
-          handleRequestError(e, name, sha)
+          handleRequestError(e, name, sha);
+          if (abortOnConflict) process.abort();
         }
       }
     }
@@ -77,7 +79,7 @@ function handleRequestError(error, branch, sha) {
   if (error instanceof requestError.RequestError) {
     if (error.status == 409) {
       commentInPr(branch, sha);
-      msg = error;
+      msg = error.message;
     } else {
       msg = `[${error.status}] ${error.message}`;
     }
