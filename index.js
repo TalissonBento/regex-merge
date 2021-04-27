@@ -32,8 +32,7 @@ async function run() {
         console.log(`${name} matches with ${branchRegex}`)
       }
       if (validRegex || matched) {
-        const promise = await mergeToHead(name);
-        promise.catch((e) => handleRequestError(e, name, sha));
+        await mergeToHead(name).catch((e) => handleRequestError(e, name, sha));
       }
     }
     if (branches.length == 0) {
