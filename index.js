@@ -41,7 +41,7 @@ async function run() {
         }
       }
     }
-    if (branches.length == 0) {
+    if (branches.length === 0) {
       keepCheckingBranches = false;
     } else {
       currentPage += 1;
@@ -50,17 +50,15 @@ async function run() {
 }
 
 async function mergeToHead(branch) {
-  if (branch == headBranch) {
+  if (branch === headBranch) {
     return;
   }
-  console.log(`start merging ${headBranch} into ${branch}`);
   const { status, ...response } = await octokit.repos.merge({
     owner: owner,
     repo: repo,
     base: branch,
     head: headBranch,
   });
-  console.log(`merge status: ${status}`);
   switch (status) {
     case 201:
       console.log(`Merging ${headBranch} to ${branch} successful`);
@@ -69,7 +67,7 @@ async function mergeToHead(branch) {
       console.log(`Nothing to merge from ${headBranch} to ${branch}`);
       break;
     default:
-      console.log(`Merging ${headBranch} to ${branch}:`, response);
+      console.warn(`Merging ${headBranch} to ${branch}:`, response);
       break;
   }
 }
@@ -77,7 +75,7 @@ async function mergeToHead(branch) {
 function handleRequestError(error, branch, sha) {
   let msg;
   if (error instanceof requestError.RequestError) {
-    if (error.status == 409) {
+    if (error.status === 409) {
       commentInPr(branch, sha);
       msg = error.message;
     } else {
@@ -103,7 +101,7 @@ function commentInPr(branch, branchSha) {
       head: `${owner}:${branch}`,
     })
     .then(({ data }) => {
-      const pr = data.find(({ head: { sha } }) => sha == branchSha);
+      const pr = data.find(({ head: { sha } }) => sha === branchSha);
       if (pr) {
         const msg = `@${pr.user.login} merge conflicts found.\nPlease merge master manually into this branch.`;
         console.log(
