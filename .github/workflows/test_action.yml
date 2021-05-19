@@ -1,0 +1,14 @@
+name: Test-Action
+on:
+  workflow_dispatch
+jobs:
+  run:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: ./
+        with:
+          accessToken: ${{ secrets.GITHUB_TOKEN }}
+          headBranch: test/base
+          excludeRegex: '^test\/exclude*'
+          branchRegex: '^test\/.+'
