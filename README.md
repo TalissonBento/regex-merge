@@ -27,7 +27,7 @@ Comments in related PR to branch, notifying about the merge conflict.
 ## Example usage
 
 ```yaml
-uses: alagos/regex-merge@v1.0
+uses: TalissonBento/regex-merge@v1.0
 with:
   accessToken: ${{ secrets.GITHUB_TOKEN }}
   headBranch: master
