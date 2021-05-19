@@ -5,11 +5,17 @@ var requestError = require("@octokit/request-error");
 const [owner, repo] = process.env.GITHUB_REPOSITORY.split("/");
 const accessToken = core.getInput("accessToken");
 const headBranch = core.getInput("headBranch");
+let excludeRegex = core.getInput("excludeRegex");
 let branchRegex = core.getInput("branchRegex");
 const notifyConflicts = core.getInput("notifyConflicts");
 const abortOnConflict = core.getInput("abortOnConflict");
 
 const octokit = github.getOctokit(accessToken);
+if (excludeRegex) {
+  excludeRegex = new RegExp(excludeRegex);
+  console.log(`Excluding those branchs matching with regex: ${excludeRegex}`);
+}
+
 if (branchRegex) {
   branchRegex = new RegExp(branchRegex);
   console.log(`Filtering braches with regex: ${branchRegex}`);
@@ -24,13 +30,14 @@ async function run() {
       repo: repo,
       page: currentPage,
     });
-    console.log(`${branches.length} branches on page ${currentPage}`);
+    console.log(`found ${branches.length} branches on page ${currentPage}`);
 
     for (const {name, commit: {sha}} of branches) {
       const validRegex = !branchRegex;
       const matched = name.match(branchRegex);
-      if (matched) {
-        console.log(`${name} matches with ${branchRegex}`)
+      if (excludeRegex && name.match(excludeRegex)) {
+        console.log(`Branch ${name} was excluded from merge`);
+        continue;
       }
       if (validRegex || matched) {
         try {
