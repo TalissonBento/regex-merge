@@ -8,6 +8,9 @@ inputs:
   headBranch:
     description: 'Branch to merge'
     required: true
+  excludeRegex:
+    description: 'Regex pattern for exclude all branchs that maches with'
+    required: false
   branchRegex:
     description: 'Regex pattern for all branches to be updated'
     required: false

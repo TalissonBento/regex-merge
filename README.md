@@ -12,6 +12,10 @@ Github Action for multiple branches merging
 
 **Required** Branch to merge.
 
+### `excludeRegex`
+
+Regex pattern for exclude all branchs that maches with
+
 ### `branchRegex`
 
 Regex pattern for all branches to be updated.
@@ -27,5 +31,6 @@ uses: alagos/regex-merge@v1.0
 with:
   accessToken: ${{ secrets.GITHUB_TOKEN }}
   headBranch: master
+  excludeRegex: '^hotfix\/.+'
   branchRegex: '^release\/.+'
 ```
